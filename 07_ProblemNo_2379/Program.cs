@@ -4,13 +4,14 @@ namespace _07_ProblemNo_2379
 {
     /// <summary>
     /// https://leetcode.com/problems/minimum-recolors-to-get-k-consecutive-black-blocks
+    ////  O(n) for MinimumRecolorsGPT and  O(n * k) for MinimumRecolors
     /// </summary>
     internal class Program
     {
         static void Main(string[] args)
         {
             Solution solution = new Solution();
-            int result = solution.MinimumRecolors("WBBWWBBWBW", 7);
+            int result = solution.MinimumRecolorsGPT("WBBWWBBWBW", 7);
         }
     }
 
@@ -18,10 +19,10 @@ namespace _07_ProblemNo_2379
     {
         public int MinimumRecolors(string blocks, int k)
         {
-            ////char[] input = blocks.ToCharArray();
             int result = 0;
-            if(!IsConsecutive(blocks, k))
+            if(!this.IsConsecutiveOptimal(blocks, k))
             {
+                //// Fixed Size Sliding Window Technique
                 List<int> minmumsOperations = new List<int>();
                 for (int i = 0; i < blocks.Length; i++)
                 {
@@ -40,6 +41,38 @@ namespace _07_ProblemNo_2379
                 } 
             }
             return result;
+        }
+
+        private bool IsConsecutiveOptimal(string blocks, int k)
+        {
+            //// Variable Size Sliding Window 
+            int upperPointer = 0;
+            int lowerPointer = 0;
+            int consectuiveCount = 0;
+            for (int i = 0; i < blocks.Length; i++)
+            {
+                if (consectuiveCount == k)
+                {
+                    //// If the consectuiveCount matches k then return
+                    return true;
+                }
+
+                if (blocks[i] == 'B')
+                {
+                    //// If Block B is Found Moves Lower Pointer Forward and Validate is Next Pointer also B
+                    lowerPointer++;
+                    consectuiveCount++;
+                }
+                else
+                {
+                    //// If Next Pointer is not B then Reset
+                    upperPointer = i + 1;
+                    lowerPointer = i + 1;
+                    consectuiveCount = 0;
+                }
+            }
+
+            return false;
         }
 
         private bool IsConsecutive(string blocks, int k)
@@ -66,6 +99,42 @@ namespace _07_ProblemNo_2379
             }
 
             return false;
+        }
+
+        public int MinimumRecolorsGPT(string blocks, int k)
+        {
+            //// Classic Sliding Window
+            int n = blocks.Length;
+            int minOps = n; // Max possible recolors is n
+            int countW = 0;
+
+            // Initial window
+            for (int i = 0; i < k; i++)
+            {
+                //// FIRST WINDOW COUNT THE W
+                if (blocks[i] == 'W')
+                    countW++;
+            }
+            minOps = countW;
+
+            // Slide the window
+            for (int i = k; i < n; i++)
+            {
+                if (blocks[i - k] == 'W')
+                {
+                    //// STARTING WINDOW --
+                    countW--;
+                }
+                
+                if (blocks[i] == 'W')
+                {
+                    //// ENDING WINDOW ++
+                    countW++;
+                }
+                    
+                minOps = Math.Min(minOps, countW);
+            }
+            return minOps;
         }
     }
 }
