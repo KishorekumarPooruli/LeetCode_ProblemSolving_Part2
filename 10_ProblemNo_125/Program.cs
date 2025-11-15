@@ -19,10 +19,7 @@ namespace _10_ProblemNo_125
         public bool IsPalindrome(string s)
         {
             char[] input = s.ToArray(); //// STRING TO CHAR ARRAY
-            string text = string.Concat(input.Where(char.IsLetterOrDigit)).ToLower();
-            ////  var xyz = new string(input.Where(char.IsLetterOrDigit).ToArray()).ToLower();
-            ////byte[] ascii = Encoding.ASCII.GetBytes(s).Where(y => y >= 65).ToArray(); //// STRING To ASCII
-            ////string text = Encoding.ASCII.GetString(ascii).ToLower(); ///// ASCII To STRING
+            string text = string.Concat(input.Where(char.IsLetterOrDigit)).ToLower(); //// EXTRA SPACE.
             int downPointer = text.Length - 1;
             bool isPalindrome = true;
             for (int topPointer = 0; topPointer < text.Length; topPointer++)
