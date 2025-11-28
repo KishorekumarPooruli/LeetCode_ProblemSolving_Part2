@@ -8,7 +8,7 @@
         static void Main(string[] args)
         {
             Solution solution = new Solution();
-            int result = solution.LargestAltitudeExtra(new int[] { -5, 1, 5, 0, -7 });
+            int result = solution.LargestAltitudeExtraSpace(new int[] { -5, 1, 5, 0, -7 });
         }
     }
 
@@ -27,19 +27,6 @@
             }
 
             return resultArray.Max();
-        }
-
-        public int LargestAltitudeOptimal(int[] gain)
-        {
-            int[] prefix = new int[gain.Length + 1];
-            prefix[0] = 0; // altitude at start
-
-            for (int i = 0; i < gain.Length; i++)
-            {
-                prefix[i + 1] = prefix[i] + gain[i]; // proper prefix sum
-            }
-
-            return prefix.Max();
         }
 
         public int LargestAltitudeOptimal(int[] gain)
