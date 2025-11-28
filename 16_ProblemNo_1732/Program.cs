@@ -8,13 +8,13 @@
         static void Main(string[] args)
         {
             Solution solution = new Solution();
-            solution.LargestAltitudeOptimal(new int[] { -4, -3, -2, -1, 4, 3, 2 });
+            int result = solution.LargestAltitudeExtra(new int[] { -5, 1, 5, 0, -7 });
         }
     }
 
     public class Solution
     {
-        public int LargestAltitude(int[] gain)
+        public int LargestAltitudeExtraSpace(int[] gain)
         {
             //// TRADITIONAL PREFIX SUM but uses extra space
             int maxSumValueTrack = 0;
@@ -23,14 +23,23 @@
             for (int i = 0; i < gain.Length; i++)
             {
                 maxSumValueTrack = maxSumValueTrack + gain[i];
-                resultArray[i] = maxSumValueTrack + gain[i];
-                if (resultArray[i] > maxSumValueTrack)
-                {
-                    maxSumValueTrack = resultArray[i];
-                }
+                resultArray[i] = maxSumValueTrack;
             }
 
-            return maxSumValueTrack;
+            return resultArray.Max();
+        }
+
+        public int LargestAltitudeOptimal(int[] gain)
+        {
+            int[] prefix = new int[gain.Length + 1];
+            prefix[0] = 0; // altitude at start
+
+            for (int i = 0; i < gain.Length; i++)
+            {
+                prefix[i + 1] = prefix[i] + gain[i]; // proper prefix sum
+            }
+
+            return prefix.Max();
         }
 
         public int LargestAltitudeOptimal(int[] gain)
