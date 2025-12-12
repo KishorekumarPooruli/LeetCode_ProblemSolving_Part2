@@ -1,6 +1,6 @@
 ﻿namespace _18_ProblemNo_3427
 {
-    internal interface ISolution
+    public interface ISolution
     {
         public int SubarraySum(int[] nums);
     }

@@ -1,24 +1,45 @@
-﻿namespace _18_ProblemNo_3427
+﻿using Microsoft.Extensions.DependencyInjection;
+
+namespace _18_ProblemNo_3427
 {
     /// <summary>
     /// https://leetcode.com/problems/sum-of-variable-length-subarrays/submissions/1851896392/?envType=problem-list-v2&envId=prefix-sum
     /// TIME, SPACE : O(n)
     /// </summary>
-    internal class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void MainOptimizedToDependencyInjection(string[] args)
         {
-            ISolution solution = new Solution();
-            Solution solution1 = new Solution();
-            List<ISolution> solutions = new List<ISolution>();
+            //// Optimized to Follows Singleton Pattern, Dependency Inversion, Difficult for UnitTest/Mock due to static field
+            ISolution solution = Solution.GetInstance;
             solution.SubarraySum(new int[] { 3, 1, 1, 2 });
-            ///// DEPENDENCY INJECTIOn and pass as aruguments
+        }
 
+        public static void Main(string[] args)
+        {
+            //// Optimized to Follows Singleton Pattern, Dependency Inversion, Dependency Injection, Also Testable
+            var services = new ServiceCollection();
+            // Singleton lifetime matches original behavior
+            services.AddSingleton<ISolution, Solution>(); 
+            var serviceProvider = services.BuildServiceProvider();
+
+            ISolution solution = serviceProvider.GetRequiredService<ISolution>();
+            ////ISolution solution = solutionInstance;
+            solution.SubarraySum(new int[] { 3, 1, 1, 2 });
         }
     }
 
-    public class Solution : ISolution
+    public sealed class Solution : ISolution
     {
+        private static readonly ISolution instance;
+
+        public static ISolution GetInstance => instance;
+
+        static Solution()
+        {
+            instance = new Solution();
+        }
+
         public int SubarraySum(int[] nums)
         {
             int totalResult = 0;
