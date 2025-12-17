@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 namespace _18_ProblemNo_3427
 {
@@ -8,17 +10,19 @@ namespace _18_ProblemNo_3427
     /// </summary>
     public class Program
     {
-        public static void MainOptimizedToDependencyInjection(string[] args)
+        public static void SingleTonMethod(string[] args)
         {
             //// Optimized to Follows Singleton Pattern, Dependency Inversion, Difficult for UnitTest/Mock due to static field
-            ISolution solution = Solution.GetInstance;
-            solution.SubarraySum(new int[] { 3, 1, 1, 2 });
+            //// ISolution solution = Solution.GetInstance;
+            //// solution.SubarraySum(new int[] { 3, 1, 1, 2 });
         }
 
         public static void Main(string[] args)
         {
             //// Optimized to Follows Singleton Pattern, Dependency Inversion, Dependency Injection, Also Testable
             var services = new ServiceCollection();
+            // Add logging first (enables ILogger<T> resolution)
+            services.AddLogging(builder => builder.AddConsole());
             // Singleton lifetime matches original behavior
             services.AddSingleton<ISolution, Solution>(); 
             var serviceProvider = services.BuildServiceProvider();
@@ -31,17 +35,23 @@ namespace _18_ProblemNo_3427
 
     public sealed class Solution : ISolution
     {
-        private static readonly ISolution instance;
+        ////private static readonly ISolution instance;
+        private readonly ILogger loggerInstance;
+        ////public static ISolution GetInstance => instance;
 
-        public static ISolution GetInstance => instance;
+        ////static Solution()
+        ////{
+        ////    instance = new Solution();
+        ////}
 
-        static Solution()
+        public Solution(ILogger logger)
         {
-            instance = new Solution();
+            loggerInstance = logger;
         }
 
         public int SubarraySum(int[] nums)
         {
+            this.loggerInstance.LogInformation("MethodStarted");
             int totalResult = 0;
             int[] preFixArray = this.BuildPrefixSumArray(nums);
             for (int i = 0; i < nums.Length; i++)
