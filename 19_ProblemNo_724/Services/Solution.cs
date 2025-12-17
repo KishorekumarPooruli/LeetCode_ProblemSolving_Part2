@@ -10,7 +10,7 @@ namespace _19_ProblemNo_724.Services
     /// https://leetcode.com/problems/find-pivot-index/description
     /// Time and Space Complexitiy : O(N)
     /// </summary>
-    public sealed class Solution : ISolution
+    public sealed class PivotSolution : IPivotSolution
     {
         public int PivotIndex(int[] nums)
         {

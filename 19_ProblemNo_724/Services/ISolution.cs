@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace _19_ProblemNo_724.Services
 {
-    public interface ISolution
+    public interface IPivotSolution
     {
+        int PivotIndex(int[] nums);
     }
 }
